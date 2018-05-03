@@ -17,7 +17,7 @@ There are two important rate limits that the user of `wosr` should be aware of:
 
 * For the WoS API, you can't request more than 5 session IDs (SIDs) in a 5 minute period (i.e., you can't call `auth()` more than 5 times in a five minute period). You can reuse a SID across queries, though, so this limit isn't a big deal.
 
-* According to the documentation, the InCites API limits users to 1,000 requests per 24 hour period, where each request can contain up to 100 UTs. That would suggest that you can download up to 100,000 publications-worth of data from the InCites API each day. However, based on my experience, there is another (undocumented) throttling limit which restricts the user to requesting no more than ~ 1,500 publications per 30 minute period.[^1]
+* According to the documentation, the InCites API limits users to 1,000 requests per 24 hour period, where each request can contain up to 100 UTs. That would suggest that you can download up to 100,000 publications-worth of data from the InCites API each day. However, based on my experience, there may another (undocumented) throttling limit which restricts the user to requesting no more than ~ 1,500 publications per 30 minute period.[^1]
 
 ### Why doesn't `pull_incites()` return data for all of my publications?
 
