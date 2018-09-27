@@ -2,6 +2,17 @@
 
 ## New functions
 
+* `query_wos_apply()` and `pull_wos_apply()` added to issue multiple queries to the WoS API and pull the data for those queries, respectively
+
+## Misc
+
+* `pull_wos()` now returns empty data frames instead of `NA` if the user's query returns no results
+* `pull_wos()` explicitly casts all string fields to be character vectors, and `pull_incites()` now correctly casts the `esi_most_cited_article` field to be a logical vector (instead of a numeric)
+
+# wosr 0.1.2
+
+## New functions
+
 * `write_wos_data()` and `read_wos_data()` added to write the data returned by `pull_wos()` as a series of CSVs and to read those CSVs back into R
 
 ## Bug fixes

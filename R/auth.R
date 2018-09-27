@@ -5,8 +5,10 @@
 #' there are limits on how many session IDs you can get in a given period of time
 #' (roughly 5 SIDs in a 5 minute time period).
 #'
-#' @param username Your username. Specify \code{username = NULL} if you want to use IP-based authentication.
-#' @param password Your password. Specify \code{password = NULL} if you want to use IP-based authentication.
+#' @param username Your username. Specify \code{username = NULL} if you want to
+#' use IP-based authentication.
+#' @param password Your password. Specify \code{password = NULL} if you want to
+#' use IP-based authentication.
 #'
 #' @return A session ID
 #'
@@ -24,6 +26,13 @@
 #' @export
 auth <- function(username = Sys.getenv("WOS_USERNAME"),
                  password = Sys.getenv("WOS_PASSWORD")) {
+
+  if (username == "" || password == "") {
+    stop(
+      "You need to provide a username and password to use the API",
+      call. = FALSE
+    )
+  }
 
   body <-
     '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"

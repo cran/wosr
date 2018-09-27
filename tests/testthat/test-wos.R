@@ -1,17 +1,17 @@
-context("WoS clients")
+context("WoS")
 
 test_that("authentication works", {
   skip_if_no_auth()
   # reuse sid across tests, so we don't run into throttling limits. note that
-  # this has to be insdie test_that function, so we can use skip_if_no_auth()
+  # this has to be inside test_that function so we can use skip_if_no_auth()
   sid <<- auth()
   expect_true(is.character(sid))
 })
 
-test_that("Wos clients work as expected for regular result sets", {
+query <- "TS = (\"dog welfare\")"
 
+test_that("Wos clients work as expected for regular result sets", {
   skip_if_no_auth()
-  query <- "TS = (\"dog welfare\")"
 
   # Test querying of WOS
   qry_res <- query_wos(query, sid = sid)
@@ -27,18 +27,49 @@ test_that("Wos clients work as expected for regular result sets", {
 
 test_that("pull_wos works as expected for small result sets", {
   skip_if_no_auth()
-  out <- pull_wos("UT=(000272366800025 OR 000272877700013)", sid = sid)
+  out <- pull_wos("UT=(000259281900002)", sid = sid)
   expect_true(is.list(out))
+  expect_true(is_empty_df(out$grant))
 })
 
-test_that("pull_wos returns na for empty result sets", {
+test_that("pull_wos returns list of zero-length dfs when query doesn't match", {
   skip_if_no_auth()
   out <- pull_wos("UT=(0002723668000)", sid = sid)
-  expect_true(is.na(out))
+  all_e <- vapply(out, is_empty_df, logical(1))
+  expect_true(all(all_e))
 })
 
-test_that("pull_wos returns data frames with NAs when data frame has no data", {
+test_that("IO functions work as expected", {
   skip_if_no_auth()
-  out <- pull_wos("Ti=(\"pet welfare\")", sid = sid)
-  expect_true(is.data.frame(out$keyword) && ncol(out$keyword) == 2)
+
+  wos_data <- pull_wos(query, sid = sid)
+  dir <- tempdir()
+
+  write_wos_data(wos_data, dir)
+  wos_data_read <- read_wos_data(dir)
+
+  are_equal <- all.equal(wos_data, wos_data_read)
+  expect_true(isTRUE(are_equal))
+})
+
+queries <- c(query, "TS = (\"cat welfare\")")
+
+test_that("pull_wos_apply returns expected `query` data frame", {
+  skip_if_no_auth()
+
+  q_names <- c("dog welf", "cat welf")
+  names(queries) <- q_names
+  out <- pull_wos_apply(queries, sid = sid)
+
+  expect_true(nrow(out$query) > 0)
+  expect_true(identical(unique(out$query$query), q_names))
+})
+
+test_that("query_wos_apply returns data frame with query results", {
+  skip_if_no_auth()
+
+  out <- query_wos_apply(queries, sid = sid)
+
+  expect_true(nrow(out) == 2)
+  expect_true(all(out$rec_cnt > 10))
 })
