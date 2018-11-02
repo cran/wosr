@@ -23,7 +23,7 @@
 #' the API's documentation \href{http://about.incites.thomsonreuters.com/api/#/}{page}
 #' (see the \code{DocumentLevelMetricsByUT} method details for definitions).
 #' Note that the column names are all converted to lowercase by
-#' \code{pull_incites} and the 0/1 flag variables are converted to booleans).
+#' \code{pull_incites} and the 0/1 flag variables are converted to booleans.
 #' Also note that not all publications indexed in WoS are also indexed in
 #' InCites, so you may not get data back for some UTs.
 #'
@@ -46,8 +46,7 @@ pull_incites <- function(uts, key = Sys.getenv("INCITES_KEY"), as_raw = FALSE, .
       call. = FALSE
     )
   }
-  uts <- gsub("^WOS:", "", uts)
-  urls <- get_urls(uts = gsub("^WOS:", "", uts))
+  urls <- get_urls(trim_uts(uts))
   out_list <- pbapply::pblapply(urls, try_incites_req, key = key, ... = ...)
   unique(process_incites(do.call("rbind", out_list), as_raw))
 }

@@ -16,16 +16,16 @@ pull_wos_apply(queries, editions = c("SCI", "SSCI", "AHCI", "ISTP",
 \href{http://ipscience-help.thomsonreuters.com/wosWebServicesLite/dbEditionsOptionsGroup/databaseEditionsWos.html}{here}.}
 
 \item{sid}{Session identifier (SID). The default setting is to get a fresh
-SID each time you query the WoS, via a call to \code{\link{auth}}. However,
-you should try to reuse SID values over multiple queries so that you don't
-run into the throttling limits placed on new sessions.}
+SID each time you query WoS via a call to \code{\link{auth}}. However,
+you should try to reuse SIDs across queries so that you don't run into the
+throttling limits placed on new sessions.}
 
 \item{...}{Arguments passed along to \code{\link[httr]{POST}}.}
 }
 \value{
 The same set of data frames that \code{\link{pull_wos}} returns, with
-the addition of a data frame named \code{query}. This data frame contains a
-mapping of queries to publications that were returned by those queries.
+the addition of a data frame named \code{query}. This data frame frame tells
+you which publications were returned by a given query.
 }
 \description{
 Run \code{pull_wos} across multiple queries
